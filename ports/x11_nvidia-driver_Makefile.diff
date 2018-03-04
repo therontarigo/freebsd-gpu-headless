@@ -1,0 +1,75 @@
+Index: x11/nvidia-driver/Makefile
+===================================================================
+--- x11/nvidia-driver/Makefile	(revision 463593)
++++ x11/nvidia-driver/Makefile	(working copy)
+@@ -9,4 +9,4 @@
+ # you need to use legacy driver version and install one of corresponding
+ # slave ports instead (`x11/nvidia-driver-340' or `x11/nvidia-driver-304').
+ 
+-PORTNAME=	nvidia-driver
++PORTNAME?=	nvidia-driver
+@@ -17,8 +17,8 @@
+ MASTER_SITES=	NVIDIA/XFree86/FreeBSD-${ARCH_SUFX}/${DISTVERSION}
+ DISTNAME=	NVIDIA-FreeBSD-${ARCH_SUFX}-${DISTVERSION}
+ 
+-MAINTAINER=	danfe@FreeBSD.org
+-COMMENT=	NVidia graphics card binary drivers for hardware OpenGL rendering
++MAINTAINER?=	danfe@FreeBSD.org
++COMMENT?=	NVidia graphics card binary drivers for hardware OpenGL rendering
+ 
+ LICENSE=	NVIDIA
+ LICENSE_NAME=	License For Customer Use of NVIDIA Software
+@@ -42,7 +42,8 @@
+ MAKE_ENV=	NVIDIA_ROOT=${WRKSRC} X11BASE=${LOCALBASE}
+ SUB_FILES=	pkg-deinstall pkg-install pkg-message nvidia.conf
+ DOCSDIR=	${PREFIX}/share/doc/NVIDIA_GLX-1.0
+-MODULESDIR=	lib/xorg/modules
++# Try to set MODULESDIR as it can be overridden by a slave port
++MODULESDIR?=	lib/xorg/modules
+ PORTDOCS=	*
+ 
+ # NVVERSION is float since r372065 (integer values become less readable
+@@ -100,8 +101,12 @@
+ 
+ .include <bsd.port.options.mk>
+ 
++.if ${PORTNAME} != nvidia-headless-driver
++CONFLICTS_INSTALL+=	nvidia-headless-*
++.endif
++
+ .if ${PORT_OPTIONS:MLINUX}
+-CONFLICTS_INSTALL=	linux[-_]dri-[0-9]* linux-f10-dri-[0-9]*
++CONFLICTS_INSTALL+=	linux[-_]dri-[0-9]* linux-f10-dri-[0-9]*
+ USES+=		linux
+ USE_LINUX=	base:build,run xorglibs
+ PLIST_SUB+=	LINUX=""
+@@ -166,8 +171,18 @@
+ .endif
+ # Adjust installation path of a conflicting file (shared between
+ # nvidia-driver and xorg-server) to ease package manager work
++.if ${MODULESDIR} == lib/xorg/modules
+ 	${REINPLACE_CMD} -e '/LIBDIR/s:xorg/modules/extensions:&/.nvidia:' \
+ 		${WRKSRC}/x11/extension/Makefile
++.else
++# Use adjusted MODULESDIR without .nvidia suffix
++	${REINPLACE_CMD} -e \
++		'/LIBDIR/s:lib/xorg/modules:'"${MODULESDIR}"':' \
++		${WRKSRC}/x11/extension/Makefile
++	${REINPLACE_CMD} -e \
++		'/DRIVERDIR/s:lib/xorg/modules:'"${MODULESDIR}"':' \
++		${WRKSRC}/x11/driver/Makefile
++.endif
+ # Do not execute afterinstall target (prevent automatic module registration
+ # and "smart" installation of conflicting files heuristics)
+ 	${REINPLACE_CMD} -e 's/afterinstall/&_dontexecute/' ${WRKSRC}/Makefile
+@@ -214,7 +229,9 @@
+ 	@${MKDIR} ${STAGEDIR}${PREFIX}/${MODULESDIR}/drivers \
+ 		${STAGEDIR}${PREFIX}/${MODULESDIR}/extensions
+ 
+-post-install: .SILENT
++post-install: post-install_nvidia-driver
++
++post-install_nvidia-driver: .SILENT
+ 	${INSTALL_SCRIPT} ${WRKSRC}/obj/nvidia-bug-report.sh \
+ 		${STAGEDIR}${PREFIX}/bin
+ # pkg-plist is already overbloated, so use these hacks instead of PLIST_SUB's

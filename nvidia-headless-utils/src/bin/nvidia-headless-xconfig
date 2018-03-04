@@ -1,0 +1,2 @@
+#!/bin/sh
+exec nvidia-xconfig --enable-all-gpus --preserve-busid -c %%PREFIX%%/etc/X11/xorg-nvidia-headless-template.conf -o %%PREFIX%%/etc/X11/xorg-nvidia-headless.conf

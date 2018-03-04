@@ -1,0 +1,3 @@
+#!/bin/sh
+. %%PREFIX%%/etc/nvidia-headless.conf
+exec %%PREFIX%%/bin/Xorg -sharevts -novtswitch -noreset -config xorg-nvidia-headless.conf "$NVDISPLAY" "$@"

@@ -1,0 +1,48 @@
+This repository contains all the needed pieces to use OpenGL on a headless
+Nvidia GPU (such as in Optimus configuration) on Freebsd, without interfering
+with functionality of primary GPU device (such as Intel).
+
+Optionally, graphical output of application running on Nvidia can be forwarded
+to primary display using VirtualGL.
+
+The ports are designed for eventual integration into FreeBSD ports tree.
+
+
+
+Testing / installation:
+
+Assumes $CHECKOUT is where this project is checked out
+Assumes https://svn.freebsd.org/ports/head is checked out to /usr/ports
+
+Setup - as root:
+
+  Prepare ports tree
+        ( cd /usr/ports && \
+          svn patch $CHECKOUT/ports/x11_nvidia-driver_Makefile.diff )
+        cp -r $CHECKOUT/ports/x11_nvidia-headless-driver \
+          /usr/ports/x11/nvidia-headless-driver
+        cp -r $CHECKOUT/ports/x11_nvidia-headless-utils \
+          /usr/ports/x11/nvidia-headless-utils
+
+  Build ports
+        make -C /usr/ports/x11/nvidia-headless-utils install
+
+    Option: graphical output using VirtualGL
+        make -C /usr/ports/x11/virtualgl install
+
+  Configure headless Xorg
+        kldload nvidia-modeset
+        nvidia-headless-xconfig
+
+Startup - as root:
+
+        kldload nvidia-modeset
+        Xorg-nvidia-headless
+
+Running applications - as user:
+
+  (headless)
+        nvrun glxinfo -B
+
+  (graphical output):
+        nvrun-vgl glxgears

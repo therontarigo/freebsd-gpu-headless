@@ -1,0 +1,5 @@
+#!/bin/sh
+. %%PREFIX%%/etc/nvidia-headless.conf
+export DISPLAY=$NVDISPLAY
+export LD_LIBRARY_PATH=%%PREFIX%%/lib/nvidia-headless
+exec "$@"

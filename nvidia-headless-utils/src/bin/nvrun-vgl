@@ -1,0 +1,3 @@
+#!/bin/sh
+. %%PREFIX%%/etc/nvidia-headless.conf
+exec "$VGLRUN" -ld %%PREFIX%%/lib/nvidia-headless -d "$NVDISPLAY" "$@"

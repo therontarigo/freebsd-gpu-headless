@@ -1,0 +1,52 @@
+Index: x11/nvidia-settings/Makefile
+===================================================================
+--- x11/nvidia-settings/Makefile	(revision 506976)
++++ x11/nvidia-settings/Makefile	(working copy)
+@@ -28,11 +28,14 @@
+ GH_ACCOUNT=	NVIDIA
+ 
+ PLIST_FILES=	bin/nvidia-settings \
++		libexec/nvidia-settings \
+ 		man/man1/nvidia-settings.1.gz \
+ 		lib/libnvidia-gtk2.so.${PORTVERSION} \
+ 		share/applications/nvidia-settings.desktop \
+ 		share/pixmaps/nvidia-settings.png
+ 
++SUB_FILES=	nvidia-settings
++
+ LDFLAGS+=	-pthread
+ LLD_UNSAFE=	yes
+ MAKE_ENV=	NV_USE_BUNDLED_LIBJANSSON=0 \
+@@ -57,5 +60,9 @@
+ 		${STAGEDIR}/${DESKTOPDIR}
+ 	${INSTALL_DATA} ${WRKSRC}/doc/nvidia-settings.png \
+ 		${STAGEDIR}/${PREFIX}/share/pixmaps
++	${MV} ${STAGEDIR}${PREFIX}/bin/nvidia-settings \
++		${STAGEDIR}${PREFIX}/libexec/nvidia-settings
++	${INSTALL} ${WRKDIR}/nvidia-settings \
++		${STAGEDIR}${PREFIX}/bin/nvidia-settings
+ 
+ .include <bsd.port.mk>
+Index: x11/nvidia-settings/files/nvidia-settings.in
+===================================================================
+--- x11/nvidia-settings/files/nvidia-settings.in	(nonexistent)
++++ x11/nvidia-settings/files/nvidia-settings.in	(working copy)
+@@ -0,0 +1,3 @@
++#!/bin/sh
++[ -e "%%LOCALBASE%%/libexec/nvidia-settings-hybrid" ] && exec %%LOCALBASE%%/libexec/nvidia-settings-hybrid "$@"
++exec %%PREFIX%%/libexec/nvidia-settings "$@"
+
+Property changes on: x11/nvidia-settings/files/nvidia-settings.in
+___________________________________________________________________
+Added: svn:eol-style
+## -0,0 +1 ##
++native
+\ No newline at end of property
+Added: svn:executable
+## -0,0 +1 ##
++*
+\ No newline at end of property
+Added: svn:mime-type
+## -0,0 +1 ##
++text/plain
+\ No newline at end of property

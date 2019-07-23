@@ -1,6 +1,6 @@
-bin/nvrun
-bin/nvrun-vgl
-bin/nvidia-headless-xconfig
 bin/Xorg-nvidia-headless
-etc/nvidia-headless.conf
+bin/nvidia-headless-xconfig
+bin/nvrun
 etc/X11/xorg-nvidia-headless-template.conf
+etc/nvidia-headless.conf
+libexec/nvidia-headless-utils/readconf

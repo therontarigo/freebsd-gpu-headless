@@ -1,0 +1,3 @@
+bin/nvrun-vgl
+etc/nvidia-hybrid.conf
+libexec/nvidia-settings-hybrid

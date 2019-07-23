@@ -1,0 +1,16 @@
+PORTNAME!=make -f Makefile -v PORTNAME
+DISTVERSION!=make -f Makefile -v DISTVERSION
+
+DISTDIR=/home/system/devel/freebsd-gpu-headless/dist
+
+distfile: ${DISTDIR}/${PORTNAME}-${DISTVERSION}.tar.xz
+.PHONY: distfile
+
+.PHONY: ${DISTDIR}/${PORTNAME}-${DISTVERSION}.tar.xz
+${DISTDIR}/${PORTNAME}-${DISTVERSION}.tar.xz:
+	tar -J -c -s '/^${PORTNAME}/${PORTNAME}-${DISTVERSION}/' -f ${DISTDIR}/${PORTNAME}-${DISTVERSION}.tar.xz ${PORTNAME}/*
+
+copydist: distfile
+	cp ${DISTDIR}/${PORTNAME}-${DISTVERSION}.tar.xz /usr/ports/distfiles/
+	make -f Makefile makesum
+.PHONY: copydist

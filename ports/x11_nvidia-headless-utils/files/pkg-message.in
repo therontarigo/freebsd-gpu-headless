@@ -1,0 +1,7 @@
+Run %%PREFIX%%/bin/nvidia-headless-xconfig to set NVIDIA options.
+This will also allow Xorg-nvidia-headless to run as non-superuser if Xorg has
+been installed setuid.
+
+Running Xorg-nvidia-headless at startup is recommended especially on mobile
+systems since leaving Nvidia GPU powered on with no Xorg may consume
+significantly more power.

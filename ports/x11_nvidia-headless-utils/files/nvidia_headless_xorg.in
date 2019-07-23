@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# $FreeBSD$
+#
+# PROVIDE: nvidia_headless_xorg
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name=nvidia_headless_xorg
+rcvar=nvidia_headless_xorg_enable
+desc="Nvidia GPU Headless Xorg"
+
+load_rc_config $name
+
+: ${nvidia_headless_xorg_enable:=NO}
+
+command="%%LOCALBASE%%/bin/Xorg"
+pidfile=/var/run/${name}.pid
+start_cmd="${name}_start"
+stop_postcmd="rm -f $pidfile"
+
+nvidia_headless_xorg_start()
+{
+	%%PREFIX%%/bin/Xorg-nvidia-headless > /var/log/nvidia-headless-xorg.log 2>&1 &
+	pid=$!
+	printf %s $pid > "$pidfile"
+}
+
+run_rc_command "$1"

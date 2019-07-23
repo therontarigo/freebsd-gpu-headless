@@ -1,0 +1,5 @@
+
+In order to switch GPU off when Xorg server is not running, the file
+%%PREFIX%%/bin/nvidia_power
+may need to be edited to contain the correct ACPI paths.
+

@@ -1,0 +1,4 @@
+A collection of scripts and template configuration files for setting up and
+using x11/nvidia-headless-driver for offscreen hardware OpenGL rendering
+
+WWW: https://github.com/therontarigo/freebsd-gpu-headless

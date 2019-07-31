@@ -2,6 +2,7 @@
 
 PORTNAME=       nvidia-hybrid-graphics
 DISTVERSION=    0.3
+PORTREVISION=	1
 CATEGORIES=     x11
 MASTER_SITES=   https://raw.githubusercontent.com/therontarigo/freebsd-gpu-headless/master/dist/
 DISTNAME=       nvidia-headless-utils-${DISTVERSION}

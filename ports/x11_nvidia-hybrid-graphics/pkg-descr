@@ -1,4 +1,8 @@
-A collection of scripts and template configuration files for setting up and
-using x11/nvidia-headless-driver for offscreen hardware OpenGL rendering
+This port integrates the Nvidia graphics driver and supporting utilities with
+VirtualGL, enabling use of Nvidia acceleration on a system with hybrid graphics
+hardware configuration, aka "Optimus".
+
+Applications to be run with Nvidia acceleration should be started using
+`nvrun-vgl`.
 
 WWW: https://github.com/therontarigo/freebsd-gpu-headless

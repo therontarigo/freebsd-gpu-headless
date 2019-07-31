@@ -5,3 +5,6 @@ been installed setuid.
 Running Xorg-nvidia-headless at startup is recommended especially on mobile
 systems since leaving Nvidia GPU powered on with no Xorg may consume
 significantly more power.
+
+Consider installing x11/nvidia-hybrid-graphics if graphical output of the
+Nvidia accelerated application on the current X11 display is required.

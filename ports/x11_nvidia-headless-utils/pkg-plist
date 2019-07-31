@@ -1,6 +1,9 @@
 bin/Xorg-nvidia-headless
 bin/nvidia-headless-xconfig
 bin/nvrun
+bin/nvrun-vgl
 etc/X11/xorg-nvidia-headless-template.conf
 etc/nvidia-headless.conf
+etc/nvidia-hybrid.conf
 libexec/nvidia-headless-utils/readconf
+libexec/nvidia-settings-hybrid

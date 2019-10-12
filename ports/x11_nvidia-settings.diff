@@ -1,6 +1,6 @@
 Index: x11/nvidia-settings/Makefile
 ===================================================================
---- x11/nvidia-settings/Makefile	(revision 506976)
+--- x11/nvidia-settings/Makefile	(revision 514358)
 +++ x11/nvidia-settings/Makefile	(working copy)
 @@ -28,11 +28,14 @@
  GH_ACCOUNT=	NVIDIA

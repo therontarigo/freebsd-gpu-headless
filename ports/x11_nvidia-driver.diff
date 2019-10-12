@@ -1,6 +1,6 @@
 Index: x11/nvidia-driver/Makefile
 ===================================================================
---- x11/nvidia-driver/Makefile	(revision 507040)
+--- x11/nvidia-driver/Makefile	(revision 514358)
 +++ x11/nvidia-driver/Makefile	(working copy)
 @@ -9,7 +9,7 @@
  # you need to use legacy driver version and install one of corresponding
@@ -98,7 +98,7 @@ Index: x11/nvidia-driver/Makefile
  .for f d in ${LINUX_DATA}
 Index: x11/nvidia-driver/pkg-plist
 ===================================================================
---- x11/nvidia-driver/pkg-plist	(revision 507040)
+--- x11/nvidia-driver/pkg-plist	(revision 514358)
 +++ x11/nvidia-driver/pkg-plist	(working copy)
 @@ -1,7 +1,10 @@
  bin/nvidia-bug-report.sh

@@ -31,9 +31,21 @@ Index: x11/nvidia-driver/Makefile
  SUB_PATCHES=	extra-patch-src-Makefile \
  		extra-patch-src-nv-freebsd.h \
  		extra-patch-src-nv-misc.h \
-@@ -293,8 +293,30 @@
+@@ -53,6 +53,7 @@
+ 		extra-patch-src-nvidia_pci.c
+ DOCSDIR=	${PREFIX}/share/doc/NVIDIA_GLX-1.0
+ MODULESDIR=	lib/xorg/modules
++EXTENSIONSDIR?=	${MODULESDIR}/extensions/.nvidia
+ PORTDOCS=	*
+ 
+ # NVVERSION is float since r372065 (integer values become less readable
+@@ -291,10 +292,27 @@
+ PLIST_SUB+=	LINUXBASE=${LINUXBASE} \
+ 		LINUX_LIBDIR=${LINUX_LIBDIR} \
  		SHLIB_VERSION=${PORTVERSION} \
- 		MODULESDIR=${MODULESDIR}
+-		MODULESDIR=${MODULESDIR}
++		MODULESDIR=${MODULESDIR} \
++		EXTENSIONSDIR=${EXTENSIONSDIR}
  
 +.ifdef LIBGLDIR
 +PLIST_SUB+=	LIBGLDIR=${LIBGLDIR}
@@ -47,12 +59,6 @@ Index: x11/nvidia-driver/Makefile
 +PLIST_SUB+=	LIBGLMAP=""
 +.endif
 +
-+.ifdef EXTENSIONSLN
-+PLIST_SUB+=	EXTENSIONSLN=${EXTENSIONSLN}
-+.else
-+PLIST_SUB+=	EXTENSIONSLN="@comment "
-+.endif
-+
  .include <bsd.port.options.mk>
  
 +.if ${PORTNAME} != nvidia-headless-driver
@@ -62,7 +68,7 @@ Index: x11/nvidia-driver/Makefile
  .if ${PORT_OPTIONS:MLINUX}
  .if ${NVVERSION} >= 390.042 && ${LINUX_DEFAULT} != c6
  USE_LINUX+=	libglvnd
-@@ -587,9 +609,33 @@
+@@ -587,9 +605,28 @@
  		${STAGEDIR}${PREFIX}/lib/libGLESv2-NVIDIA.so.2
  	${RM} -f ${STAGEDIR}${PREFIX}/lib/libGLESv2.so
  .endif
@@ -72,7 +78,7 @@ Index: x11/nvidia-driver/Makefile
  	${INSTALL_DATA} ${WRKDIR}/nvidia.conf \
  		${STAGEDIR}${PREFIX}/etc/libmap.d/
 +.endif
-+# nvidia-headless-driver needs a library path containing unrenamed lib*GL*.so
++# nvidia-headless-utils needs a library path containing unrenamed lib*GL*.so
 +.ifdef LIBGLDIR
 +	${MKDIR} ${STAGEDIR}${PREFIX}/${LIBGLDIR}
 +	${RLN} ${STAGEDIR}${PREFIX}/lib/libGL-NVIDIA.so.1 \
@@ -83,15 +89,10 @@ Index: x11/nvidia-driver/Makefile
 +		${STAGEDIR}${PREFIX}/${LIBGLDIR}/libGLESv2.so.2
 +.endif
 +# nvidia-headless-driver needs a separate modules dir
-+.ifdef EXTENSIONSLN
-+	${MKDIR} ${STAGEDIR}${PREFIX}/${EXTENSIONSLN}
-+	${RMDIR} ${STAGEDIR}${PREFIX}/${EXTENSIONSLN}
-+# ${RLN} (install) has a bug of creating a broken symbolic link if
-+# ${EXTENSIONSLN} starts with ${MODULESDIR} as a literal string, regardless of
-+# directory separators.
-+# EXTENSIONSLN must be chosen carefully by the slave port.
-+	${RLN} ${STAGEDIR}${PREFIX}/${MODULESDIR}/extensions/.nvidia \
-+		${STAGEDIR}${PREFIX}/${EXTENSIONSLN}
++.if ${EXTENSIONSDIR} != ${MODULESDIR}/extensions/.nvidia
++	${MKDIR} ${STAGEDIR}${PREFIX}/${EXTENSIONSDIR}
++	${MV} ${STAGEDIR}${PREFIX}/${MODULESDIR}/extensions/.nvidia/* \
++		${STAGEDIR}${PREFIX}/${EXTENSIONSDIR}/
 +.endif
  
  post-install-LINUX-on:
@@ -112,11 +113,14 @@ Index: x11/nvidia-driver/pkg-plist
  lib/libGL-NVIDIA.so
  lib/libGL-NVIDIA.so.1
  lib/libEGL-NVIDIA.so
-@@ -32,6 +35,7 @@
+@@ -30,8 +33,8 @@
+ lib/vdpau/libvdpau_nvidia.so.1
+ man/man1/nvidia-smi.1.gz
  %%MODULESDIR%%/drivers/nvidia_drv.so
- %%MODULESDIR%%/extensions/.nvidia/libglx.so
- %%MODULESDIR%%/extensions/.nvidia/libglx.so.1
-+%%EXTENSIONSLN%%
+-%%MODULESDIR%%/extensions/.nvidia/libglx.so
+-%%MODULESDIR%%/extensions/.nvidia/libglx.so.1
++%%EXTENSIONSDIR%%/libglx.so
++%%EXTENSIONSDIR%%/libglx.so.1
  /%%KMODDIR%%/nvidia.ko
  /%%KMODDIR%%/nvidia-modeset.ko
  %%LINUX%%%%LINUXBASE%%/etc/OpenCL/vendors/nvidia.icd

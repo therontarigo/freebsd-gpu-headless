@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# $FreeBSD$
+#
+# PROVIDE: nvidia_xorg
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name=nvidia_xorg
+rcvar=nvidia_xorg_enable
+desc="Nvidia GPU Dedicated Xorg"
+
+load_rc_config $name
+
+: ${nvidia_xorg_enable:=NO}
+: ${nvidia_modeset:=YES}
+: ${nvidia_manage_kld:=YES}
+
+command="%%LOCALBASE%%/bin/Xorg"
+pidfile=/var/run/${name}.pid
+start_cmd="${name}_start"
+stop_postcmd="${name}_poststop"
+
+nvidia_xorg_start()
+{
+	if checkyesno nvidia_manage_kld; then
+		if checkyesno nvidia_modeset; then
+			kldload -n nvidia-modeset
+		else
+			kldload -n nvidia
+		fi
+	fi
+
+	%%PREFIX%%/bin/Xorg-nvidia-headless > /var/log/nvidia-headless-xorg.log 2>&1 &
+	pid=$!
+	printf %s $pid > "$pidfile"
+}
+
+nvidia_xorg_poststop()
+{
+	rm -f "$pidfile"
+
+	if checkyesno nvidia_manage_kld; then
+		if checkyesno nvidia_modeset; then
+			kldstat -q -n nvidia-modeset && kldunload -f nvidia-modeset
+		else
+			kldstat -q -n nvidia && kldunload -f nvidia
+		fi
+	fi
+}
+
+run_rc_command "$1"

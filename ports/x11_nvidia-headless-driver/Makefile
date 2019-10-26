@@ -4,15 +4,15 @@ PORTREVISION=	0
 
 MASTERDIR=	${.CURDIR}/../nvidia-driver
 
-MAINTAINER=     theron.tarigo@gmail.com
+MAINTAINER=     theron@FreeBSD.org
 COMMENT=        NVidia graphics card binary drivers for hardware OpenGL rendering on secondary device
 
-CONFLICTS_INSTALL:=nvidia-driver
+CONFLICTS_INSTALL=	nvidia-driver
 
-EXTENSIONSLN=	lib/xorg/_modules-NVIDIA/extensions
+EXTENSIONSDIR=	lib/xorg/modules-NVIDIA/extensions
 NO_LIBMAP=1
 
-LIBGLDIR?=	lib/libGL-NVIDIA
+LIBGLDIR=	lib/libGL-NVIDIA
 
 SUB_FILES=	pkg-message
 

@@ -1,5 +1,5 @@
 This repository contains all the needed pieces to use OpenGL on a headless
-Nvidia GPU (such as in Optimus configuration) on Freebsd, without interfering
+Nvidia GPU (such as in Optimus configuration) on FreeBSD, without interfering
 with functionality of primary GPU device (such as Intel).
 
 Optionally, graphical output of application running on Nvidia can be forwarded
@@ -17,27 +17,24 @@ Assumes https://svn.freebsd.org/ports/head is checked out to /usr/ports
 Setup - as root:
 
   Prepare ports tree
-        ( cd /usr/ports && \
-          svn patch $CHECKOUT/ports/x11_nvidia-driver_Makefile.diff )
+
+        svn patch $CHECKOUT/ports/x11_nvidia-driver.diff /usr/ports
+        svn patch $CHECKOUT/ports/x11_nvidia-settings.diff /usr/ports
         cp -r $CHECKOUT/ports/x11_nvidia-headless-driver \
           /usr/ports/x11/nvidia-headless-driver
         cp -r $CHECKOUT/ports/x11_nvidia-headless-utils \
           /usr/ports/x11/nvidia-headless-utils
+        cp -r $CHECKOUT/ports/x11_nvidia-hybrid-graphics \
+          /usr/ports/x11/nvidia-hybrid-graphics
 
   Build ports
-        make -C /usr/ports/x11/nvidia-headless-utils install
 
-    Option: graphical output using VirtualGL
-        make -C /usr/ports/x11/virtualgl install
-
-  Configure headless Xorg
-        kldload nvidia-modeset
-        nvidia-headless-xconfig
+        make -C /usr/ports/x11/nvidia-hybrid-graphics install
 
 Startup - as root:
 
-        kldload nvidia-modeset
-        Xorg-nvidia-headless
+        sysrc nvidia_xorg_enable=YES
+        service nvidia_xorg start
 
 Running applications - as user:
 

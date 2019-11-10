@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=       nvidia-headless-utils
-DISTVERSION=    0.4
+DISTVERSION=    0.5
 CATEGORIES=     x11
 MASTER_SITES=   https://raw.githubusercontent.com/therontarigo/freebsd-gpu-headless/master/dist/
 DISTNAME=       ${PORTNAME}-${DISTVERSION}

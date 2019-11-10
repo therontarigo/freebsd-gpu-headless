@@ -14,4 +14,4 @@ mkdir -p /var/cache/nvidia-headless
 xconfarg="$xconfig"
 %%PREFIX%%/bin/nvidia-headless-xconfig -o "$xconfig"
 fi
-exec %%LOCALBASE%%/bin/Xorg -sharevts -novtswitch -noreset -config "$xconfarg" "$NVDISPLAY" "$@"
+exec %%LOCALBASE%%/bin/Xorg -sharevts -novtswitch -noreset -config "$xconfarg" -configdir "xorg-nvidia-headless.conf.d" "$NVDISPLAY" "$@"
